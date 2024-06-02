@@ -1,6 +1,6 @@
 import os
 
-menu = f"""\033[36m
+MENU = f"""\033[36m
 
   ____                                   __  __       _   _                    
  |  _ \                                 |  \/  |     | | | |                   
@@ -16,10 +16,6 @@ menu = f"""\033[36m
 
 => """
 
-MENSAGEM_FALHA = f"\033[31m[FALHA] -\033[m" 
-MENSAGEM_SUCESSO = f"\033[32m[SUCESSO] -\033[m" 
-MENSAGEM_CONTINUE = f"\n\033[37mPressione <Enter> para voltar ao menu...\033[m"
-
 TAMANHO_CELULAS = 14
 
 TITULO_1 = "Operação".center(TAMANHO_CELULAS)
@@ -29,17 +25,21 @@ TITULO_4 = "Saldo".center(TAMANHO_CELULAS)
 
 extrato = f"\n|{TITULO_1}|{TITULO_2}|{TITULO_3}|{TITULO_4}|\n\n"
 
+MENSAGEM_FALHA = f"\033[31m[FALHA] -\033[m" 
+MENSAGEM_SUCESSO = f"\033[32m[SUCESSO] -\033[m" 
+MENSAGEM_CONTINUE = f"\n\033[37mPressione <Enter> para voltar ao menu...\033[m"
+
 saldo = 0
-limite = 500
 numero_deposito = 0
 numero_saque = 0
+LIMITE_VALOR_SAQUE = 500
 LIMITE_SAQUES = 3
 
 os.system("clear") # Limpa a tela no inicia do programa
 
 while True:
-    # Solicita o comando:
-    opcao = input(menu)
+    # Solicita a operação:
+    opcao = input(MENU)
 
     # Operação de depósito:
     if opcao == "1":
@@ -63,16 +63,16 @@ while True:
 
             # Solicita que usuário entre com o valor novamente por deposito inválido!
             elif deposito_invalida:
-                print(f"\n{MENSAGEM_FALHA} Digite um valor positivo ou zero para cancelar!", end="\n\n");
+                print(f"\n{MENSAGEM_FALHA} Digite um valor positivo ou zero para cancelar!", end="\n\n")
                 continue
 
-            # Computa o depósito
+            # Valor válido - Computa o depósito
             numero_deposito += 1
             saldo += valor_deposito
 
-            # Adiciona no extrato
-            menssagem_operacao_deposito = str("Depósito").center(TAMANHO_CELULAS)
-            menssagem_operacao_deposito = f"\033[34m{menssagem_operacao_deposito}\033[m"
+            # Formata os registros do depósito e adiciona no extrato
+            mensagem_operacao_deposito = str("Depósito").center(TAMANHO_CELULAS)
+            mensagem_operacao_deposito = f"\033[34m{mensagem_operacao_deposito}\033[m"
 
             mensagem_numero_deposito = str(numero_deposito).center(TAMANHO_CELULAS)
             mensagem_numero_deposito = f"\033[34m{mensagem_numero_deposito}\033[m"
@@ -83,7 +83,7 @@ while True:
             mensagem_saldo_deposito = f"R${saldo:<.2f}".center(TAMANHO_CELULAS)
             mensagem_saldo_deposito = f"\033[32m{mensagem_saldo_deposito}\033[m"
 
-            extrato = extrato.__add__(f"|{menssagem_operacao_deposito}|{mensagem_numero_deposito}|{mensagem_valor_deposito}|{mensagem_saldo_deposito}|\n")
+            extrato = extrato.__add__(f"|{mensagem_operacao_deposito}|{mensagem_numero_deposito}|{mensagem_valor_deposito}|{mensagem_saldo_deposito}|\n")
             
             # Finaliza a operação
             print(f"\n{MENSAGEM_SUCESSO} Depósito realizado!")
@@ -106,7 +106,7 @@ while True:
                 cancelar_saque = valor_saque == 0
                 saque_invalido = valor_saque < 0
                 saque_insuficiente = valor_saque > saldo
-                limite_saque_insuficiente = valor_saque > limite
+                limite_saque_insuficiente = valor_saque > LIMITE_VALOR_SAQUE
                 
                 # Cancela a operação
                 if cancelar_saque:
@@ -127,16 +127,14 @@ while True:
 
                 # Solicita que usuário entre com o valor novamente por limite de saque insuficiente
                 elif limite_saque_insuficiente:
-                    print(f"\n{MENSAGEM_FALHA} Seu limite de saque é: R${limite:.2f}", end="\n\n")
+                    print(f"\n{MENSAGEM_FALHA} Seu limite de saque é: R${LIMITE_VALOR_SAQUE:.2f}", end="\n\n")
                     continue
                 
                 # Valor válido - Computa o saque
                 numero_saque += 1
                 saldo -= valor_saque
 
-                menssagem_saque = f"\033[31m- R${valor_saque:<11.2f}\033[m"
-
-                # Adiciona no extrato
+                # Formata os registros do saque e adiciona no extrato
                 menssagem_operacao_saque = str("Saque").center(TAMANHO_CELULAS)
                 menssagem_operacao_saque = f"\033[33m{menssagem_operacao_saque}\033[m" 
                 
